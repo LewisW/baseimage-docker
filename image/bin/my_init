@@ -160,7 +160,6 @@ def run_command_killable(*argv):
 	filename = argv[0]
 	status = None
 	
-	info("Running %s..." % filename)
 	process = subprocess.Popen(argv, stdout=OUTPUT)
 	pid = process.pid
 	try:
@@ -330,9 +329,9 @@ if args.skip_runit and len(args.main_command) == 0:
 	sys.exit(1)
 
 if log_level >= LOG_LEVEL_WARN:
-	OUTPUT = open(os.devnull, 'w')
-else:
 	OUTPUT = subprocess.STDOUT
+else:
+	OUTPUT = open(os.devnull, 'w')
 	
 # Run main function.
 signal.signal(signal.SIGTERM, lambda signum, frame: ignore_signals_and_raise_keyboard_interrupt('SIGTERM'))
