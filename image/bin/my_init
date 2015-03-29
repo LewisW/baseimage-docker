@@ -160,8 +160,7 @@ def run_command_killable(*argv):
 	filename = argv[0]
 	status = None
 	
-	process = subprocess.Popen(argv, stdout=OUTPUT)
-	pid = process.pid
+	pid = subprocess.Popen(argv, stdout=OUTPUT).pid
 	try:
 		status = waitpid_reap_other_children(pid)
 	except BaseException as s:
@@ -222,8 +221,7 @@ def run_startup_files():
 
 def start_runit():
 	info("Booting runit daemon...")
-	pid = os.spawnl(os.P_NOWAIT, "/usr/bin/runsvdir", "/usr/bin/runsvdir",
-		"-P", "/etc/service")
+	pid = subprocess.Popen(["/usr/bin/runsvdir", "-P", "/etc/service"], stdout=OUTPUT).pid
 	info("Runit started as PID %d" % pid)
 	return pid
 
@@ -278,7 +276,8 @@ def main(args):
 					info("Runit exited with status %d" % exit_status)
 		else:
 			info("Running %s..." % " ".join(args.main_command))
-			pid = os.spawnvp(os.P_NOWAIT, args.main_command[0], args.main_command)
+			
+			pid = subprocess.Popen(args.main_command).pid
 			try:
 				exit_code = waitpid_reap_other_children(pid)
 				if exit_code is None:
@@ -328,7 +327,7 @@ if args.skip_runit and len(args.main_command) == 0:
 	error("When --skip-runit is given, you must also pass a main command.")
 	sys.exit(1)
 
-if log_level >= LOG_LEVEL_WARN:
+if log_level >= LOG_LEVEL_INFO:
 	OUTPUT = subprocess.STDOUT
 else:
 	OUTPUT = open(os.devnull, 'w')
