@@ -328,7 +328,7 @@ if args.skip_runit and len(args.main_command) == 0:
 	sys.exit(1)
 
 if log_level >= LOG_LEVEL_INFO:
-	OUTPUT = subprocess.STDOUT
+	OUTPUT = None
 else:
 	OUTPUT = open(os.devnull, 'w')
 	
