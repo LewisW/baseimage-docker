@@ -159,6 +159,8 @@ def stop_child_process(name, pid, signo = signal.SIGTERM, time_limit = KILL_PROC
 def run_command_killable(*argv):
 	filename = argv[0]
 	status = None
+	
+	info("Running %s..." % filename)
 	process = subprocess.Popen(argv, stdout=OUTPUT)
 	pid = process.pid
 	try:
