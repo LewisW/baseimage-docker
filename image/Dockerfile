@@ -4,7 +4,7 @@ MAINTAINER Phusion <info@phusion.nl>
 ENV HOME /root
 ADD . /build
 
-RUN 1=1 && /build/prepare.sh && \
+RUN true && /build/prepare.sh && \
 	/build/system_services.sh && \
 	/build/utilities.sh && \
 	/build/cleanup.sh
