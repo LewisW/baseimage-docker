@@ -36,8 +36,8 @@ mkdir /etc/service/syslog-forwarder
 cp /build/runit/syslog-forwarder /etc/service/syslog-forwarder/run
 
 ## Install logrotate.
-#$minimal_apt_get_install logrotate
-#cp /build/config/logrotate_syslogng /etc/logrotate.d/syslog-ng
+$minimal_apt_get_install logrotate
+cp /build/config/logrotate_syslogng /etc/logrotate.d/syslog-ng
 
 ## Install the SSH server.
 $minimal_apt_get_install openssh-server
