@@ -121,6 +121,7 @@ def waitpid_reap_other_children(pid):
 		# already waited for this process. Return the status
 		# that was obtained back then.
 		del terminated_child_processes[pid]
+		info("Cached status %s (PID %d)..." % (status, pid))
 		return status
 
 	done = False
@@ -129,14 +130,19 @@ def waitpid_reap_other_children(pid):
 		try:
 			# https://github.com/phusion/baseimage-docker/issues/151#issuecomment-92660569
 			this_pid, status = os.waitpid(pid, os.WNOHANG)
+			info("Initial status %s (PID %d, %d)..." % (status, this_pid, pid))
+			        
 			if this_pid == 0:
 				this_pid, status = os.waitpid(-1, 0)
+				info("New status %s (PID %d, %d)..." % (status, this_pid, pid))
 			if this_pid == pid:
 				done = True
 			else:
 				# Save status for later.
 				terminated_child_processes[this_pid] = status
 		except OSError as e:
+			info("OS Error %d - %s when querying PID %d..." % (e.errno, e.strerror, pid))
+			
 			if e.errno == errno.ECHILD or e.errno == errno.ESRCH:
 				return None
 			else:
