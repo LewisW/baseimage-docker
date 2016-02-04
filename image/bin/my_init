@@ -137,6 +137,8 @@ def waitpid_reap_other_children(pid):
 				# Save status for later.
 				terminated_child_processes[this_pid] = status
 		except OSError as e:
+			info("OS Error %d - %s when querying PID %d..." % (e.errno, e.strerror, pid))
+			
 			if e.errno == errno.ECHILD or e.errno == errno.ESRCH:
 				return None
 			else:
@@ -176,6 +178,7 @@ def run_command_killable(*argv):
 		status = waitpid_reap_other_children(pid)
 	except BaseException as s:
 		warn("An error occurred. Aborting.")
+		warn("Error code: %s, message: %s" % (s.errno, str(e)))
 		stop_child_process(filename, pid)
 		raise
 	if status != 0:
